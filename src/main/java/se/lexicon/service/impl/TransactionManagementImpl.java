@@ -78,4 +78,28 @@ public class TransactionManagementImpl implements TransactionManagement {
 
         return transactionDao.findTransactionsByWalletId(WalletId);
     }
+
+    @Override
+    public boolean transfer(String fromWalletId, String toWalletId, CryptoCurrency cryptoCurrency, BigDecimal amount, String description) {
+
+        if(fromWalletId == null || cryptoCurrency == null || amount == null || description == null) throw new IllegalArgumentException("Transaction params were not valid");
+
+        Optional<Wallet> optionalFromWallet = walletDao.findWallet(fromWalletId);
+        if(optionalFromWallet.isEmpty()) throw new WalletNotFoundException("From wallet not Found");
+        Optional<Wallet> optionalToWallet = walletDao.findWallet(toWalletId);
+        if(optionalToWallet.isEmpty()) throw new WalletNotFoundException("To wallet not Found");
+
+        Wallet fromWallet = optionalFromWallet.get();
+        Wallet toWallet = optionalToWallet.get();
+
+        if(fromWallet.getBalance(cryptoCurrency).compareTo(amount) < 0) throw new RuntimeException("Insufficient Balance");
+
+        Transaction withdraw = createWithdrawalTransaction(fromWalletId, cryptoCurrency, amount, description);
+        Transaction deposit = createDepositTransaction(toWalletId, cryptoCurrency, amount, description);
+
+        Transaction dep = transactionDao.createTransaction(deposit);
+        Transaction with = transactionDao.createTransaction(withdraw);
+
+        return true;
+    }
 }

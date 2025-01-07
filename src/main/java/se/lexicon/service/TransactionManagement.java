@@ -15,4 +15,6 @@ public interface TransactionManagement {
 
 
     // TODO - Transfer between accounts
+    boolean transfer(String fromWalletId, String toWalletId, CryptoCurrency cryptoCurrency, BigDecimal amount, String description);
+
 }

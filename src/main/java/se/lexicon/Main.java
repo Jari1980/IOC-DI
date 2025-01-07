@@ -11,6 +11,7 @@ import se.lexicon.service.impl.TransactionManagementImpl;
 import se.lexicon.service.impl.WalletManagementImpl;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -70,5 +71,13 @@ public class Main {
         //Testing getTransactionsByWalletId, working
         System.out.println(management.getTransactionsByWalletId("This should return empty array"));
         System.out.println(management.getTransactionsByWalletId(jari_wallet.getId()));
+        System.out.println("--------------------------------------------------------");
+
+        //Creating new wallet in order to test transfer
+        Wallet broccoli = walletManagement.create("Broccoli");
+
+        management.transfer(jari_wallet.getId(), broccoli.getId(), CryptoCurrency.BTC, new BigDecimal(1), "Giving Broccoli 1 Bitcoin");
+        System.out.println(walletManagement.getById(broccoli.getId()).getBalance(CryptoCurrency.BTC));
+
     }
 }
