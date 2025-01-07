@@ -11,6 +11,7 @@ import se.lexicon.model.Wallet;
 import se.lexicon.service.TransactionManagement;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +73,9 @@ public class TransactionManagementImpl implements TransactionManagement {
 
     @Override
     public List<Transaction> getTransactionsByWalletId(String WalletId) {
-        // TODO - Implement this method
-        return List.of();
+
+        if(WalletId == null || WalletId.isEmpty()) throw new IllegalArgumentException("Transaction params were not valid");
+
+        return transactionDao.findTransactionsByWalletId(WalletId);
     }
 }

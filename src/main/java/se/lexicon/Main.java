@@ -49,6 +49,7 @@ public class Main {
         System.out.println(walletManagement.getById(jari_wallet.getId()));
         System.out.println("-----------------------------------------");
 
+        //Testing createWithdrawalTransaction
         /* //Working as intended
         Transaction shouldFail = management.createWithdrawalTransaction(
                 jari_wallet.getId(),
@@ -64,5 +65,10 @@ public class Main {
                 "More than in bank should throw exception"
         );
         System.out.println(walletManagement.getById(jari_wallet.getId()));
+        System.out.println("----------------------------------------------------");
+
+        //Testing getTransactionsByWalletId, working
+        System.out.println(management.getTransactionsByWalletId("This should return empty array"));
+        System.out.println(management.getTransactionsByWalletId(jari_wallet.getId()));
     }
 }
