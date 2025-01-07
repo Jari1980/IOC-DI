@@ -54,8 +54,20 @@ public class TransactionManagementImpl implements TransactionManagement {
 
     @Override
     public Transaction createWithdrawalTransaction(String walletId, CryptoCurrency cryptoCurrency, BigDecimal amount, String description) {
-        // TODO - Implement this method
-        return null;
+
+        if(walletId == null || cryptoCurrency == null || amount == null || description == null)
+            throw new IllegalArgumentException("Transaction params were not valid");
+
+        Optional<Wallet> optionalWallet = walletDao.findWallet(walletId);
+        if(optionalWallet.isEmpty()) throw new WalletNotFoundException("Wallet not Found");
+
+        Wallet wallet = optionalWallet.get();
+        if(wallet.getBalance(cryptoCurrency).compareTo(amount) < 0) throw new RuntimeException("Insufficient Balance");
+        wallet.withdrawal(cryptoCurrency, amount);
+
+        Transaction transaction = new Transaction("WITHDRAWAL", amount, walletId, cryptoCurrency.getName(), description);
+
+        return transactionDao.createTransaction(transaction);
     }
 
     @Override
